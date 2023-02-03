@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- JavaScript Bundle with Popper -->
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-A3rJD856KowSb7dwlZdYEkO39Gagi7vIsF0jrRAoQmDKKtQBHUuLZ9AsSv4jD4Xa"
+      crossorigin="anonymous"
+    ></script>
+    <title><%= locals.title%></title>
+    <link rel="icon" type="image/png" href="/images/logo_caption_sm.png" />
+    <link rel="stylesheet" href="/css/bootstrap.min.css" type="text/css" />
+  </head>
+  <body>
+    <section class="h-100 gradient-form" style="background-color: #eee">
+      <div class="container py-5 h-100">
+        <div class="row d-flex justify-content-center align-items-center h-100">
+          <div class="col-xl-10">
+            <div class="card rounded-3 text-black">
+              <div class="row g-0">
+                <div class="col-lg-6">
+                  <div class="card-body p-md-5 mx-md-4">
+                    <div class="text-center">
+                      <img
+                        src="/images/logo_plain.jpg"
+                        style="width: 185px; height: 185px"
+                        alt="logo"
+                        id="logo"
+                      />
+                      <h4 class="mt-1 mb-5 pb-1" style="color: rgb(21, 92, 73)">
+                        Pushti - Dream for a Better Future
+                      </h4>
+                    </div>
+
+                    <form id="login_form" method="post" action="/login/">
+                      <p style="color: aliceblue">
+                        Please login to your account
+                      </p>
+
+                      <div class="form-outline mb-4">
+                        <input
+                          type="number"
+                          id="id"
+                          name="id"
+                          class="form-control"
+                          placeholder="Your ID"
+                          required
+                        />
+                      </div>
+
+                      <div class="form-outline mb-4">
+                        <input
+                          type="password"
+                          id="password"
+                          name="password"
+                          class="form-control"
+                          placeholder="Password"
+                          required
+                        />
+                        <label class="form-label" for="form2Example22"></label>
+                        <% if (locals.error.length>0) { %>
+                        <div class="alert alert-dismissible alert-danger">
+                          <button
+                            type="button"
+                            class="btn-close"
+                            data-bs-dismiss="alert"
+                          ></button>
+                          <%= error %>
+                        </div>
+                        <% } %> <% if (locals.logout.length>0) { %>
+                        <div class="alert alert-dismissible alert-success">
+                          <button
+                            type="button"
+                            class="btn-close"
+                            data-bs-dismiss="alert"
+                          ></button>
+                          <%= logout %>
+                        </div>
+                        <% } %>
+                      </div>
+                      <div class="text-center pt-1 mb-5 pb-1">
+                        <label id="errorLabel"></label>
+
+                        <button
+                          class="btn btn-primary btn-block fa-lg gradient-custom-2 mb-3"
+                          id="submitButton"
+                          type="submit"
+                        >
+                          Log in
+                        </button>
+                        <!-- <a class="text-muted" href="#!">Forgot password?</a> -->
+                      </div>
+
+                      <div
+                        class="d-flex align-items-center justify-content-center pb-4"
+                      >
+                        <p class="mb-0 me-2" style="color: aqua">
+                          Don't have an account?
+                        </p>
+                        <button
+                          id="register"
+                          type="button"
+                          class="btn btn-outline-danger"
+                        >
+                          Register Today!
+                        </button>
+                      </div>
+                    </form>
+                  </div>
+                </div>
+                <div
+                  class="col-lg-6 d-flex align-items-center gradient-custom-2"
+                >
+                  <img
+                    src="/images/login_img.jpg"
+                    alt="Sample photo"
+                    class="img-fluid"
+                    style="
+                      border-top-left-radius: 0.25rem;
+                      border-bottom-left-radius: 0.25rem;
+                      border-top: 0px;
+                      border-bottom: 0px;
+                      max-width: 100%;
+                      height: auto;
+                      min-height: max-content;
+                    "
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <script>
+      document.getElementById("register").onclick = function () {
+        location.href = "/register/";
+      };
+
+      document.getElementById("logo").onclick = function () {
+        location.href = "/";
+      };
+
+      // const sampleForm = document.getElementById("login_form");
+
+      // //Add an event listener to the form element and handler for the submit an event.
+      // sampleForm.addEventListener("submit", async (e) => {
+      //   /**
+      //    * Prevent the default browser behaviour of submitting
+      //    * the form so that you can handle this instead.
+      //    */
+      //   // e.stopImmediatePropagation();
+      //   // e.preventDefault();
+      //   /**
+      //    * Get the element attached to the event handler.
+      //    */
+      //   let form = e.currentTarget;
+
+      //   /**
+      //    * Take the URL from the form's `action` attribute.
+      //    */
+      //   let url = form.action;
+
+      //   try {
+      //     /**
+      //      * Takes all the form fields and make the field values
+      //      * available through a `FormData` instance.
+      //      */
+      //     let formData = new FormData(form);
+
+      //     /**
+      //      * The `postFormFieldsAsJson()` function in the next step.
+      //      */
+      //     let responseData = await postFormFieldsAsJson({ url, formData });
+
+      //     //Destructure the response data
+      //     let { serverDataResponse } = responseData;
+
+      //     //Display the response data in the console (for debugging)
+      //     console.log("Response");
+      //     console.log(serverDataResponse);
+      //   } catch (error) {
+      //     //If an error occurs display it in the console (for debugging)
+      //     console.error(error);
+      //   }
+      // });
+
+      // /**
+      //  * Helper function to POST data as JSON with Fetch.
+      //  */
+      // async function postFormFieldsAsJson({ url, formData }) {
+      //   //Create an object from the form data entries
+      //   let formDataObject = Object.fromEntries(formData.entries());
+      //   // Format the plain form data as JSON
+      //   let formDataJsonString = JSON.stringify(formDataObject);
+
+      //   //Set the fetch options (headers, body)
+      //   let fetchOptions = {
+      //     //HTTP method set to POST.
+      //     method: "POST",
+      //     //Set the headers that specify you're sending a JSON body request and accepting JSON response
+      //     headers: {
+      //       "Content-Type": "application/json",
+      //       Accept: "application/xhtml+xml",
+      //     },
+      //     // POST request body as JSON string.
+      //     body: formDataJsonString,
+      //   };
+
+      //   // Get the response body as JSON.
+      //   // If the response was not OK, throw an error.
+      //   let res = await fetch(url, fetchOptions);
+
+      //   //If the response is not ok throw an error (for debugging)
+      //   console.log(res.body);
+      //   if (!res.ok) {
+      //     let error = await res.text();
+      //     throw new Error(error);
+      //   }
+      //   //If the response was OK, return the response body.
+      //   return res.json();
+      // }
+    </script>
+
+    <script
+      src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+      integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+      integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+      integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+      crossorigin="anonymous"
+    ></script>
+  </body>
+</html>

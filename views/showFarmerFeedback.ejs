@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <link rel="icon" type="image/png" href="/images/logo_caption_sm.png" />
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- JavaScript Bundle with Popper -->
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-A3rJD856KowSb7dwlZdYEkO39Gagi7vIsF0jrRAoQmDKKtQBHUuLZ9AsSv4jD4Xa"
+      crossorigin="anonymous"
+    ></script>
+    <title><%= locals.title %></title>
+    <style>
+        .f:hover { background-color: #707B7C;}
+        .f {background-color: #057D97;}
+        .t:hover {background-color: #707B7C;}
+        .t {background-color: #2C3E50;}
+    </style>
+    <link rel="stylesheet" href="/css/bootstrap.min.css" type="text/css" />
+  </head>
+  <body onload="getFeedback()">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+      <div class="container-fluid">
+        <img
+          src="/images/logo_caption_sm.png"
+          style="width: 100px; height: 100px"
+          alt="logo"
+        />
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarColor01"
+          aria-controls="navbarColor01"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarColor01">
+          <ul class="navbar-nav me-auto">
+            <li class="nav-item">
+              <a class="nav-link" href="/admin"
+                >Home
+                <span class="visually-hidden">(current)</span>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/admin/UpReport">UP Report</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/admin/combined-reports"
+                >Combined Reports</a
+              >
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/admin/getfarmerinfo">Farmer Info</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/admin/addproduct">Add Product</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/admin/updateprice">Update Price</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/admin/updateagent">Update Agent</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/admin/updatebudget">Update Budget</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/admin/updatetax">Update Tax</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/admin/addloan">Add Loan</a>
+            </li>
+            <li class="nav-item dropdown">
+              <p
+                class="nav-link dropdown-toggle active"
+                data-bs-toggle="dropdown"
+                role="button"
+                aria-haspopup="true"
+                aria-expanded="false"
+              >
+                Feedback
+              </p>
+              <div class="dropdown-menu">
+                <a class="dropdown-item" href="/admin/farmerfeedbacks">Farmer Feedback</a>
+                <a class="dropdown-item" href="/admin/agentfeedbacks"
+                  >Agent Feedback</a
+                >
+              </div>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/logout">Log Out</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+    <div class="mx-auto" style="text-align: center; padding-top: 2%">
+      <h4>Farmer Feedbacks</h4>
+      <div class="modal" id="modal">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="agentName"></h5>
+              <button type="button" class="btn-close" aria-label="Close" onclick="cls()">
+                <span aria-hidden="true"></span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <p id="detailF"></p>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" onclick="cls()">Close</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <table class="table table-striped" id="feedTab">
+        <thead>
+          <tr>
+            <th scope="col">ID</th>
+            <th scope="col">Agent ID</th>
+            <th scope="col">Name</th>
+            <th scope="col">Location</th>
+            <th scope="col">Date-Time</th>
+          </tr>
+        </thead>
+      </table>
+    </div>
+    <div><h6 id="msg" style="text-align: center; color: grey"></h6></div>
+    <script>
+         async function postData(url = "", data = {}) {
+        // Default options are marked with *
+        const response = await fetch(url, {
+          method: "POST", // *GET, POST, PUT, DELETE, etc.
+          mode: "cors", // no-cors, *cors, same-origin
+          cache: "no-cache", // *default, no-cache, reload, force-cache, only-if-cached
+          credentials: "same-origin", // include, *same-origin, omit
+          headers: {
+            "Content-Type": "application/json",
+            // 'Content-Type': 'application/x-www-form-urlencoded',
+          },
+          redirect: "follow", // manual, *follow, error
+          referrerPolicy: "no-referrer", // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
+          body: JSON.stringify(data), // body data type must match "Content-Type" header
+        });
+
+        return response.json(); // parses JSON response into native JavaScript objects
+      }
+
+
+        function getFeedback() {
+            postData("farmerfeedbacks/getfeedbacks", {}).then((data) => {
+                console.log(data);
+                let tab = document.getElementById("feedTab");
+                if(data.length == 0){
+                    document.getElementById("msg").innerHTML = "No feedbacks yet!";
+                    return;
+                }
+                for(let i=0; i<data.length; i++){
+                    let row = tab.insertRow();
+                    for(let j=0; j<data[i].length-1; j++){
+                        let cell = row.insertCell();
+                        cell.append(document.createTextNode(data[i][j]));
+                    }
+                    if(data[i][5].toString().charAt(0) == "F"){
+                        tab.rows[row.rowIndex].className = "f";
+                    }
+                    else{
+                        tab.rows[row.rowIndex].className = "t";
+                    }
+                    tab.rows[row.rowIndex].addEventListener("click", getDetails);
+                }
+            })
+        }
+
+        function getDetails(e) {
+            id = e.target.parentElement.cells[0].innerHTML;
+            postData("farmerfeedbacks/getdetails", {feedback_id: id}).then((data) => {
+                document.getElementById("modal").style.display = "block";
+                document.getElementById("agentName").innerHTML = "From: " + e.target.parentElement.cells[2].innerHTML;
+                document.getElementById("detailF").innerHTML = data[0][0];
+            });
+            postData("farmerfeedbacks/markreadfeedback", {feedback_id: id}).then((data) => {
+                if(data.status){
+                    e.target.parentElement.className = "t";
+                }
+            })
+        }
+
+        function cls() {
+            document.getElementById("modal").style.display = "none";
+        }
+    </script>
+    <script
+      src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+      integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+      integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+      integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+      crossorigin="anonymous"
+    ></script>
+  </body>
+</html>

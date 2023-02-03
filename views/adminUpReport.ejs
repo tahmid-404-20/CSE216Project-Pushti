@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <link rel="icon" type="image/png" href="/images/logo_caption_sm.png" />
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="/css/bootstrap.min.css" type="text/css" />
+    <!-- JavaScript Bundle with Popper -->
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-A3rJD856KowSb7dwlZdYEkO39Gagi7vIsF0jrRAoQmDKKtQBHUuLZ9AsSv4jD4Xa"
+      crossorigin="anonymous"
+    ></script>
+    <title><%= locals.title %></title>
+  </head>
+  <body onload="getDivision()">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+      <div class="container-fluid">
+        <img
+          src="/images/logo_caption_sm.png"
+          style="width: 100px; height: 100px"
+          alt="logo"
+        />
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarColor01"
+          aria-controls="navbarColor01"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarColor01">
+          <ul class="navbar-nav me-auto">
+            <li class="nav-item">
+              <a class="nav-link" href="/admin"
+                >Home
+                <span class="visually-hidden">(current)</span>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link active" href="/admin/UpReport">UP Report</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/admin/combined-reports"
+                >Combined Reports</a
+              >
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/admin/getfarmerinfo">Farmer Info</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/admin/addproduct">Add Product</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/admin/updateprice">Update Price</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/admin/updateagent">Update Agent</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/admin/updatebudget">Update Budget</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/admin/updatetax">Update Tax</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/admin/addloan">Add Loan</a>
+            </li>
+            <li class="nav-item dropdown">
+              <p
+                class="nav-link dropdown-toggle"
+                data-bs-toggle="dropdown"
+                role="button"
+                aria-haspopup="true"
+                aria-expanded="false"
+              >
+                Feedback
+              </p>
+              <div class="dropdown-menu">
+                <a class="dropdown-item" href="/admin/farmerfeedbacks"
+                  >Farmer Feedback</a
+                >
+                <a class="dropdown-item" href="/admin/agentfeedbacks"
+                  >Agent Feedback</a
+                >
+              </div>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/logout">Log Out</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+    <div
+      style="
+        text-align: center;
+        padding-left: 25%;
+        padding-right: 25%;
+        padding-top: 2%;
+      "
+    >
+      <h4>Union Parishad Individual Report</h4>
+      <form>
+        <div class="form-outline mb-4" style="padding-top: 3%">
+          <select
+            class="form-select form-select-sm"
+            name="division"
+            id="division"
+            onchange="getDistrict()"
+          >
+            <option value="" disabled selected hidden>Choose Division</option>
+          </select>
+        </div>
+        <div class="form-outline mb-4" style="padding-top: 1%">
+          <select
+            class="form-select form-select-sm"
+            name="district"
+            id="district"
+            onchange="getUpazilla()"
+          >
+            <option value="" disabled selected hidden>Choose District</option>
+          </select>
+        </div>
+        <div class="form-outline mb-4" style="padding-top: 1%">
+          <select
+            class="form-select form-select-sm"
+            name="upazilla"
+            id="upazilla"
+            onchange="getUp()"
+          >
+            <option value="" disabled selected hidden>Choose Upazilla</option>
+          </select>
+        </div>
+        <div class="form-outline mb-4" style="padding-top: 1%">
+          <select
+            class="form-select form-select-sm"
+            name="up"
+            id="up"
+            onchange="getReport()"
+          >
+            <option value="" disabled selected hidden>Choose Union</option>
+          </select>
+        </div>
+      </form>
+    </div>
+    <div id="agent" style="display: none; padding-top: 1%">
+      <h6 style="text-align: center">Agent Info</h6>
+      <table class="table table-striped" id="agentTable">
+        <thead>
+          <tr>
+            <th scope="col">Agent ID</th>
+            <th scope="col">Name</th>
+            <th scope="col">Phone</th>
+            <th scope="col">Address</th>
+            <th scope="col">Age</th>
+          </tr>
+        </thead>
+      </table>
+    </div>
+    <div id="report" style="display: none">
+      <h6 style="text-align: center">Union Parishad Summary</h6>
+      <table class="table table-striped" id="reportTable">
+        <thead>
+          <tr>
+            <th scope="col">Name</th>
+            <th scope="col">Farmers</th>
+            <th scope="col">Remaining Budget</th>
+            <th scope="col">Total Loan</th>
+            <th scope="col">Due Deduction</th>
+            <th scope="col">Total Tax</th>
+          </tr>
+        </thead>
+      </table>
+    </div>
+    <script>
+      async function postData(url = "", data = {}) {
+        // Default options are marked with *
+        const response = await fetch(url, {
+          method: "POST", // *GET, POST, PUT, DELETE, etc.
+          mode: "cors", // no-cors, *cors, same-origin
+          cache: "no-cache", // *default, no-cache, reload, force-cache, only-if-cached
+          credentials: "same-origin", // include, *same-origin, omit
+          headers: {
+            "Content-Type": "application/json",
+            // 'Content-Type': 'application/x-www-form-urlencoded',
+          },
+          redirect: "follow", // manual, *follow, error
+          referrerPolicy: "no-referrer", // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
+          body: JSON.stringify(data), // body data type must match "Content-Type" header
+        });
+        return response.json(); // parses JSON response into native JavaScript objects
+      }
+
+      function resetOption(id) {
+        let el = document.getElementById(id);
+        while (el.length > 1) {
+          el.remove(1);
+        }
+        el.options[0].selected = true;
+      }
+
+      function resetTable(id) {
+        let tab = document.getElementById(id);
+        while (tab.rows.length > 1) {
+          tab.deleteRow(1);
+        }
+      }
+
+      function getDivision() {
+        resetOption("division");
+        resetOption("district");
+        resetOption("upazilla");
+        resetOption("up");
+        resetTable("reportTable");
+        document.getElementById("report").style.display = "none";
+        resetTable("agentTable");
+        document.getElementById("agent").style.display = "none";
+
+        postData("/register/locInfo", { id: 0, locType: "division" }).then(
+          (data) => {
+            var divop = document.querySelector("#division");
+            for (var i = 0; i < data.length; i++) {
+              var op = new Option(data[i][1], data[i][0]);
+              divop.append(op);
+            }
+            divop.options[0].selected = true;
+          }
+        );
+      }
+
+      function getDistrict() {
+        resetOption("district");
+        resetOption("upazilla");
+        resetOption("up");
+        resetTable("reportTable");
+        document.getElementById("report").style.display = "none";
+        resetTable("agentTable");
+        document.getElementById("agent").style.display = "none";
+
+        el = document.getElementById("division");
+        let selid = el.options[el.selectedIndex].value;
+        postData("/register/locInfo", { id: selid, locType: "district" }).then(
+          (data) => {
+            var divop = document.querySelector("#district");
+            for (var i = 0; i < data.length; i++) {
+              var op = new Option(data[i][1], data[i][0]);
+              divop.append(op);
+            }
+            divop.options[0].selected = true;
+          }
+        );
+      }
+
+      function getUpazilla() {
+        resetOption("upazilla");
+        resetOption("up");
+        resetTable("reportTable");
+        document.getElementById("report").style.display = "none";
+        resetTable("agentTable");
+        document.getElementById("agent").style.display = "none";
+
+        el = document.getElementById("district");
+        let selid = el.options[el.selectedIndex].value;
+        postData("/register/locInfo", {
+          id: selid,
+          locType: "upazilla",
+        }).then((data) => {
+          var divop = document.querySelector("#upazilla");
+          for (var i = 0; i < data.length; i++) {
+            var op = new Option(data[i][1], data[i][0]);
+            divop.append(op);
+          }
+          divop.options[0].selected = true;
+        });
+      }
+
+      function getUp() {
+        resetOption("up");
+        resetTable("reportTable");
+        document.getElementById("report").style.display = "none";
+        resetTable("agentTable");
+        document.getElementById("agent").style.display = "none";
+
+        el = document.getElementById("upazilla");
+        let selid = el.options[el.selectedIndex].value;
+        postData("/register/locInfo", {
+          id: selid,
+          locType: "up",
+        }).then((data) => {
+          var divop = document.querySelector("#up");
+          for (var i = 0; i < data.length; i++) {
+            var op = new Option(data[i][1], data[i][0]);
+            divop.append(op);
+          }
+          divop.options[0].selected = true;
+        });
+      }
+
+      function getReport() {
+        resetTable("reportTable");
+        document.getElementById("report").style.display = "block";
+        resetTable("agentTable");
+        document.getElementById("agent").style.display = "block";
+
+        el = document.getElementById("up");
+        let selid = el.options[el.selectedIndex].value;
+        postData("UpReport/getUpReport", {
+          id: selid,
+        }).then((data) => {
+          var tab = document.getElementById("reportTable");
+          var ag = document.getElementById("agentTable");
+          for (let i = 0; i < data.length; i++) {
+            let row = tab.insertRow();
+            for (let j = 0; j < 6; j++) {
+              let cell = row.insertCell();
+              cell.append(document.createTextNode(data[i][j]));
+            }
+            let arow = ag.insertRow();
+            for (let j = 6; j < data[i].length; j++) {
+              let cell = arow.insertCell();
+              cell.append(document.createTextNode(data[i][j]));
+            }
+          }
+        });
+      }
+    </script>
+    <script
+      src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+      integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+      integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+      integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+      crossorigin="anonymous"
+    ></script>
+  </body>
+</html>

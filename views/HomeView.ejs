@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
+    <meta name="description" content="" />
+    <meta name="author" content="" />
+    <!-- JavaScript Bundle with Popper -->
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-A3rJD856KowSb7dwlZdYEkO39Gagi7vIsF0jrRAoQmDKKtQBHUuLZ9AsSv4jD4Xa"
+      crossorigin="anonymous"
+    ></script>
+    <title>Pushti Home</title>
+    <link rel="icon" type="image/png" href="/images/logo_caption_sm.png" />
+    <!-- Core theme CSS (includes Bootstrap)-->
+    <link rel="stylesheet" href="/css/bootstrap.min.css" type="text/css" />
+    <link href="/css/styles.css" rel="stylesheet" />
+  </head>
+  <body id="page-top">
+    <!-- Navigation-->
+    <nav
+      class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top"
+      id="mainNav"
+    >
+      <div class="container px-4">
+        <a class="navbar-brand" href="#page-top"
+          ><img src="/images/logo_caption_sm.png" height="50" width="50" />
+        </a>
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarResponsive"
+          aria-controls="navbarResponsive"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarResponsive">
+          <ul class="navbar-nav ms-auto">
+            <li class="nav-item">
+              <a class="nav-link" href="#about">About</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#services">Services</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#contact">Contact</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+    <!-- Header-->
+    <header class="bg-primary bg-gradient text-white">
+      <div class="container px-4 text-center">
+        <% if (locals.message.length>0) { %>
+        <div class="alert alert-dismissible alert-success">
+          <button
+            type="button"
+            class="btn-close"
+            data-bs-dismiss="alert"
+          ></button>
+          <%= message %>
+        </div>
+        <% } %>
+        <h1 class="fw-bolder">Welcome to Pushti</h1>
+        <p class="lead">
+          It is a development project to ensure both economic and healthy future
+        </p>
+        <a class="btn btn-lg btn-light" href="/login">Login</a>
+        <a class="btn btn-lg btn-light" href="/register">Register</a>
+      </div>
+    </header>
+    <!-- About section-->
+    <section
+      id="about"
+      style="
+        background-image: url('/images/poultry.jpg');
+        color: white;
+        text-shadow: 0 0 4px black;
+      "
+    >
+      <div class="container px-4">
+        <div class="row gx-4 justify-content-center">
+          <div class="col-lg-8">
+            <h2>About this project</h2>
+            <p class="lead">
+              Pushti will work with the dairy and poultry farmers in rural areas
+              throughout the country. It will try to ensure their economic
+              growth. Moreover, it will work to make protein sources available
+              for everyone. What Pushti does:
+            </p>
+            <ul>
+              <li>Gives poultry and dairy farmers soft loans</li>
+              <li>Buys the products from the farmers</li>
+              <li>Sells the products to local retailers</li>
+              <li>Maintains the balance in the market-price</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!-- Services section-->
+    <section
+      class="bg-light"
+      id="services"
+      style="
+        background-image: url('/images/dairy.jpg');
+        color: white;
+        text-shadow: 0 0 4px black;
+      "
+    >
+      <div class="container px-4">
+        <div class="row gx-4 justify-content-center">
+          <div class="col-lg-8">
+            <h2>Services we offer</h2>
+            <p class="lead">
+              You can register as a dairy and/or poultry farmer. We will give
+              you a soft loan. You can sell your products to us from which some
+              percentage will be taken to repay the loan. This can result in
+              economic growth of our farmers. If you are a businessman, you can
+              buy products from us in retail-price. We will maintain balance in
+              the market as well as ensure proper distribution of protein diets.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!-- Contact section-->
+    <section id="contact">
+      <div class="container px-4">
+        <div class="row gx-4 justify-content-center">
+          <div class="col-lg-8">
+            <h2>Contact us</h2>
+            <p class="lead">
+              Email: pushtiproject@gmail.com<br />Phone: 01748844017
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!-- Footer-->
+    <footer class="py-5 bg-dark">
+      <div class="container px-4">
+        <p class="m-0 text-center text-white">
+          Copyright &copy; Nafis & Shattik
+        </p>
+      </div>
+    </footer>
+    <!-- Bootstrap core JS-->
+    <!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <-- Core theme JS-->
+    <!-- <script>
+      /*!
+       * Start Bootstrap - Scrolling Nav v5.0.5 (https://startbootstrap.com/template/scrolling-nav)
+       * Copyright 2013-2022 Start Bootstrap
+       * Licensed under MIT (https://github.com/StartBootstrap/startbootstrap-scrolling-nav/blob/master/LICENSE)
+       */
+      //
+      // Scripts
+      //
+
+      window.addEventListener("DOMContentLoaded", (event) => {
+        // Activate Bootstrap scrollspy on the main nav element
+        const mainNav = document.body.querySelector("#mainNav");
+        if (mainNav) {
+          new bootstrap.ScrollSpy(document.body, {
+            target: "#mainNav",
+            offset: 74,
+          });
+        }
+
+        // Collapse responsive navbar when toggler is visible
+        const navbarToggler = document.body.querySelector(".navbar-toggler");
+        const responsiveNavItems = [].slice.call(
+          document.querySelectorAll("#navbarResponsive .nav-link")
+        );
+        responsiveNavItems.map((responsiveNavItem) => {
+          responsiveNavItem.addEventListener("click", () => {
+            if (window.getComputedStyle(navbarToggler).display !== "none") {
+              navbarToggler.click();
+            }
+          });
+        });
+      });
+    </script>  -->
+    <script
+      src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+      integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+      integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+      integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+      crossorigin="anonymous"
+    ></script>
+  </body>
+</html>

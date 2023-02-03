@@ -1,0 +1,694 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- JavaScript Bundle with Popper -->
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-A3rJD856KowSb7dwlZdYEkO39Gagi7vIsF0jrRAoQmDKKtQBHUuLZ9AsSv4jD4Xa"
+      crossorigin="anonymous"
+    ></script>
+    <title><%= locals.title%></title>
+    <link rel="icon" type="image/png" href="/images/logo_caption_sm.png" />
+    <link rel="stylesheet" href="/css/bootstrap.min.css" type="text/css" />
+    <style>
+      .card-registration .select-input.form-control[readonly]:not([disabled]) {
+        font-size: 1rem;
+        line-height: 2.15;
+        padding-left: 0.75em;
+        padding-right: 0.75em;
+      }
+      .card-registration .select-arrow {
+        top: 13px;
+      }
+    </style>
+  </head>
+  <body onload="getDivision()">
+    <section class="h-100" style="background-color: darkgray">
+      <div class="container py-5 h-100">
+        <div class="row d-flex justify-content-center align-items-center h-100">
+          <div class="col">
+            <div class="card card-registration my-4">
+              <div class="row g-0">
+                <div class="col-xl-6 d-none d-xl-block">
+                  <img
+                    id="register-side-image"
+                    src="/images/reg_login_sideImage.jpg"
+                    alt="Sample photo"
+                    class="img-fluid"
+                    style="
+                      border-top-left-radius: 0.25rem;
+                      border-bottom-left-radius: 0.25rem;
+                    "
+                  />
+                </div>
+                <div class="col-xl-6">
+                  <div class="card-body p-md-5 text-black">
+                    <h3 class="mb-5 text-uppercase" style="color: aliceblue">
+                      Pushti - Farmer Registration
+                    </h3>
+                    <div
+                      class="alert alert-dismissible alert-danger"
+                      id="pending"
+                      style="display: none"
+                    >
+                      <button
+                        type="button"
+                        class="btn-close"
+                        onclick="cls()"
+                      ></button>
+                      You Already Have a Pending Request.
+                    </div>
+                    <div
+                      class="alert alert-dismissible alert-success"
+                      id="success"
+                      style="display: none"
+                    >
+                      <button
+                        type="button"
+                        class="btn-close"
+                        onclick="cls2()"
+                      ></button>
+                      Registration succesfull. You can login in a few days if it
+                      is approved
+                    </div>
+                    <form
+                      id="registration-form"
+                      method="post"
+                      action="/register/process-request/"
+                    >
+                      <div class="row">
+                        <div class="col-md-6 mb-4">
+                          <div class="form-outline">
+                            <input
+                              type="text"
+                              id="firstname"
+                              name="firstname"
+                              class="form-control form-control-lg"
+                              placeholder="First Name"
+                              required
+                            />
+                            <p
+                              style="
+                                text-align: center;
+                                color: red;
+                                font-family: cursive;
+                              "
+                              id="firstnameError"
+                              class="ermas"
+                            ></p>
+                          </div>
+                        </div>
+                        <div class="col-md-6 mb-4">
+                          <div class="form-outline">
+                            <input
+                              type="text"
+                              id="lastname"
+                              name="lastname"
+                              class="form-control form-control-lg"
+                              placeholder="Last Name"
+                              required
+                            />
+                            <p
+                              style="
+                                text-align: center;
+                                color: red;
+                                font-family: cursive;
+                              "
+                              id="lastnameError"
+                              class="ermas"
+                            ></p>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="form-outline mb-4">
+                        <input
+                          type="number"
+                          id="nid"
+                          name="nid"
+                          class="form-control form-control-lg"
+                          placeholder="NID No"
+                          required
+                        />
+                        <p
+                          style="
+                            text-align: center;
+                            color: red;
+                            font-family: cursive;
+                          "
+                          id="nidError"
+                          class="ermas"
+                        ></p>
+                      </div>
+
+                      <div class="form-outline mb-4">
+                        <input
+                          type="password"
+                          id="password"
+                          name="password"
+                          class="form-control form-control-lg"
+                          placeholder="Password"
+                          required
+                        />
+                        <p
+                          style="
+                            text-align: center;
+                            color: red;
+                            font-family: cursive;
+                          "
+                          id="passwordError"
+                          class="ermas"
+                        ></p>
+                      </div>
+
+                      <div class="form-outline mb-4">
+                        <label
+                          class="form-label"
+                          for="dob"
+                          style="color: aliceblue"
+                          >Date of Birth</label
+                        >
+                        <input
+                          type="date"
+                          id="dob"
+                          name="dob"
+                          placeholder="DOB: DD-MON-YYYY e.g 01-FEB-1990"
+                          class="form-control form-control-lg"
+                          required
+                        />
+                      </div>
+
+                      <div class="form-outline mb-4">
+                        <input
+                          type="text"
+                          id="address"
+                          name="address"
+                          class="form-control form-control-lg"
+                          placeholder="Address"
+                          required
+                        />
+                      </div>
+
+                      <div class="form-outline mb-4">
+                        <input
+                          type="number"
+                          id="phoneNo"
+                          name="phoneNo"
+                          class="form-control form-control-lg"
+                          placeholder="Eleven Digit Phone No"
+                          required
+                        />
+                        <p
+                          style="
+                            text-align: center;
+                            color: red;
+                            font-family: cursive;
+                          "
+                          id="phoneNoError"
+                          class="ermas"
+                        ></p>
+                      </div>
+
+                      <div
+                        class="d-md-flex justify-content-start align-items-center mb-4 py-2"
+                      >
+                        <h6 class="mb-0 me-4" style="color: aliceblue">
+                          Division:
+                        </h6>
+                        <select
+                          class="form-select form-select-sm"
+                          name="division"
+                          id="division"
+                          required
+                        >
+                          <option value="" disabled selected hidden>
+                            Choose a division
+                          </option>
+                        </select>
+                      </div>
+
+                      <div
+                        class="d-md-flex justify-content-start align-items-center mb-4 py-2"
+                      >
+                        <h6 class="mb-0 me-4" style="color: aliceblue">
+                          District:
+                        </h6>
+                        <select
+                          class="form-select form-select-sm"
+                          name="district"
+                          id="district"
+                          required
+                        >
+                          <option value="" disabled selected hidden>
+                            Choose a district
+                          </option>
+                        </select>
+                      </div>
+
+                      <div
+                        class="d-md-flex justify-content-start align-items-center mb-4 py-2"
+                      >
+                        <h6 class="mb-0 me-4" style="color: aliceblue">
+                          Upazilla:
+                        </h6>
+                        <select
+                          class="form-select form-select-sm"
+                          name="upazilla"
+                          id="upazilla"
+                          required
+                        >
+                          <option value="" disabled selected hidden>
+                            Choose a upazilla
+                          </option>
+                        </select>
+                      </div>
+
+                      <div
+                        class="d-md-flex justify-content-start align-items-center mb-4 py-2"
+                      >
+                        <h6 class="mb-0 me-4" style="color: aliceblue">
+                          Union:
+                        </h6>
+                        <select
+                          class="form-select form-select-sm"
+                          name="up"
+                          id="up"
+                          required
+                        >
+                          <option value="" disabled selected hidden>
+                            Choose a Union Parishad
+                          </option>
+                        </select>
+                      </div>
+
+                      <div
+                        class="d-md-flex justify-content-start align-items-center mb-4 py-2"
+                      >
+                        <h6 class="mb-0 me-4" style="color: aliceblue">
+                          FarmerType:
+                        </h6>
+
+                        <div class="form-check form-check-inline mb-0 me-4">
+                          <input
+                            class="form-check-input"
+                            type="radio"
+                            name="farmerType"
+                            id="dairy"
+                            value="1"
+                            required
+                          />
+                          <label
+                            class="form-check-label"
+                            for="dairy"
+                            style="color: aliceblue"
+                            >Dairy</label
+                          >
+                        </div>
+
+                        <div class="form-check form-check-inline mb-0 me-4">
+                          <input
+                            class="form-check-input"
+                            type="radio"
+                            name="farmerType"
+                            id="poultry"
+                            value="2"
+                            required
+                          />
+                          <label
+                            class="form-check-label"
+                            for="poultry"
+                            style="color: aliceblue"
+                            >Poultry</label
+                          >
+                        </div>
+
+                        <div class="form-check form-check-inline mb-0">
+                          <input
+                            class="form-check-input"
+                            type="radio"
+                            name="farmerType"
+                            id="both"
+                            value="3"
+                            required
+                          />
+                          <label
+                            class="form-check-label"
+                            style="color: aliceblue"
+                            for="both"
+                            >Both</label
+                          >
+                        </div>
+                      </div>
+                      <div
+                        class="d-md-flex justify-content-start align-items-center mb-4 py-2"
+                      >
+                        <h6 class="mb-0 me-4" style="color: aliceblue">
+                          LoanType:
+                        </h6>
+                        <select
+                          class="form-select form-select-sm"
+                          name="loanType"
+                          id="loanType"
+                          required
+                        >
+                          <option value="" disabled selected hidden>
+                            Choose a loan
+                          </option>
+                        </select>
+                      </div>
+                      <div class="d-flex justify-content-end pt-3">
+                        <button
+                          id="reset"
+                          type="button"
+                          class="btn btn-light btn-lg"
+                        >
+                          Reset all
+                        </button>
+                        <button
+                          id="submit"
+                          type="submit"
+                          class="btn btn-warning btn-lg ms-2"
+                        >
+                          Submit form
+                        </button>
+                      </div>
+                    </form>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <script>
+      // get the locations info by sending post via following function requests, you receive id, name array
+      // for division id: anything, locType: "division"
+      // for district id: (division_id) locType: "district"
+      // for upazilla id: (district_id) locType: "upazilla"
+      // for up       id: (upazilla_id) locType: "up"
+      postData("/register/locInfo", { id: 0, locType: "" }).then((data) => {
+        console.log(data); // JSON data parsed by `data.json()` call
+      });
+
+      function getDivision() {
+        postData("/register/locInfo", { id: 0, locType: "division" }).then(
+          (data) => {
+            var divop = document.querySelector("#division");
+            for (var i = 0; i < data.length; i++) {
+              var op = new Option(data[i][1], data[i][0]);
+              divop.append(op);
+            }
+            divop.options[0].selected = true;
+            resdist();
+            resUpzilla();
+            resUP();
+            var ele = document.getElementsByName("farmerType");
+            for (var i = 0; i < ele.length; i++) ele[i].checked = false;
+            res();
+          }
+        );
+      }
+
+      document.getElementById("division").addEventListener("change", (e) => {
+        var sel = document.getElementById("division");
+        var ind = sel.options[sel.selectedIndex].value;
+        var distop = document.querySelector("#district");
+        if (ind === "") {
+          return;
+        }
+        postData("/register/locInfo", { id: ind, locType: "district" }).then(
+          (data) => {
+            resdist();
+            for (var i = 0; i < data.length; i++) {
+              var op = new Option(data[i][1], data[i][0]);
+              distop.append(op);
+            }
+            distop.options[0].selected = true;
+            resUpzilla();
+            resUP();
+          }
+        );
+      });
+
+      document.getElementById("district").addEventListener("change", (e) => {
+        var sel = document.getElementById("district");
+        var ind = sel.options[sel.selectedIndex].value;
+        var upzop = document.querySelector("#upazilla");
+        if (ind === "") {
+          return;
+        }
+        postData("/register/locInfo", { id: ind, locType: "upazilla" }).then(
+          (data) => {
+            resUpzilla();
+            for (var i = 0; i < data.length; i++) {
+              var op = new Option(data[i][1], data[i][0]);
+              upzop.append(op);
+            }
+            upzop.options[0].selected = true;
+            resUP();
+          }
+        );
+      });
+
+      document.getElementById("upazilla").addEventListener("change", (e) => {
+        var sel = document.getElementById("upazilla");
+        var ind = sel.options[sel.selectedIndex].value;
+        var upop = document.querySelector("#up");
+        if (ind === "") {
+          return;
+        }
+        postData("/register/locInfo", { id: ind, locType: "up" }).then(
+          (data) => {
+            resUP();
+            for (var i = 0; i < data.length; i++) {
+              var op = new Option(data[i][1], data[i][0]);
+              upop.append(op);
+            }
+            upop.options[0].selected = true;
+          }
+        );
+      });
+
+      let result = document.querySelector("#loanType");
+      document.body.addEventListener("change", function (e) {
+        let target = e.target;
+        let type_id;
+        switch (target.id) {
+          case "dairy":
+            type_id = 1;
+            break;
+          case "poultry":
+            type_id = 2;
+            break;
+          case "both":
+            type_id = 3;
+            break;
+          default:
+            return;
+        }
+
+        // postData("", {}).then((data) => {
+        //   console.log(data); // JSON data parsed by `data.json()` call
+        // });
+
+        postData("/register/loanOptions", { type_id: type_id }).then((data) => {
+          console.log(data); // JSON data parsed by `data.json()` call
+          // result.textContent = data;
+          console.log(data);
+          while (result.length > 1) {
+            result.remove(1);
+          }
+          for (var i = 0; i < data.length; i++) {
+            var op = new Option(
+              data[i][1] + "-" + data[i][2] + "(D)-" + data[i][3] + "(T)",
+              data[i][0]
+            );
+            result.append(op);
+          }
+          result.options[0].selected = true;
+        });
+      });
+
+      function res() {
+        while (result.length > 1) {
+          result.remove(1);
+        }
+        result.options[0].selected = true;
+      }
+
+      function resdist() {
+        let dis = document.getElementById("district");
+        while (dis.length > 1) {
+          dis.remove(1);
+        }
+        dis.options[0].selected = true;
+      }
+
+      function resUpzilla() {
+        let upz = document.getElementById("upazilla");
+        while (upz.length > 1) {
+          upz.remove(1);
+        }
+        upz.options[0].selected = true;
+      }
+
+      function resUP() {
+        let up = document.getElementById("up");
+        while (up.length > 1) {
+          up.remove(1);
+        }
+        up.options[0].selected = true;
+      }
+
+      async function postData(url = "", data = {}) {
+        // Default options are marked with *
+        const response = await fetch(url, {
+          method: "POST", // *GET, POST, PUT, DELETE, etc.
+          mode: "cors", // no-cors, *cors, same-origin
+          cache: "no-cache", // *default, no-cache, reload, force-cache, only-if-cached
+          credentials: "same-origin", // include, *same-origin, omit
+          headers: {
+            "Content-Type": "application/json",
+            // 'Content-Type': 'application/x-www-form-urlencoded',
+          },
+          redirect: "follow", // manual, *follow, error
+          referrerPolicy: "no-referrer", // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
+          body: JSON.stringify(data), // body data type must match "Content-Type" header
+        });
+        return response.json(); // parses JSON response into native JavaScript objects
+      }
+
+      //document.getElementById("reset").addEventListener("click", res);
+      // document.getElementsByName("farmerType").onclick() = function () {
+      //   var checked_gender = document.querySelector(
+      //   'input[name = "farmerType"]:checked'
+      // );
+
+      // if (checked_gender != null) {
+      //   //Test if something was checked
+      //   var type_id = checked_gender.value;
+      //   console.log("TYpe id:");
+      //   console.log(type_id);
+      // } else {
+      //   // alert("Nothing checked"); //Alert, nothing was checked.
+      // }
+      // }
+    </script>
+
+    <script>
+      function cls() {
+        document.getElementById("pending").style.display = "none";
+      }
+
+      function cls2() {
+        document.getElementById("success").style.display = "none";
+      }
+
+      function resetPage() {
+        var elements = document.getElementsByTagName("input");
+        for (var ii = 0; ii < elements.length; ii++) {
+          if (
+            elements[ii].type == "text" ||
+            elements[ii].type == "number" ||
+            elements[ii].type == "date" ||
+            elements[ii].type == "password"
+          ) {
+            elements[ii].value = "";
+          }
+          let all = document.getElementsByClassName("ermas");
+          for (let i = 0; i < all.length; i++) {
+            all[i].innerHTML = "";
+          }
+        }
+
+        var ele = document.getElementsByName("farmerType");
+        for (var i = 0; i < ele.length; i++) ele[i].checked = false;
+        ele = document.getElementById("division");
+        ele.options[ele.selectedIndex].selected = false;
+        ele.options[0].selected = true;
+        res();
+        resdist();
+        resUpzilla();
+        resUP();
+      }
+      document.getElementById("reset").onclick = function () {
+        resetPage();
+      };
+
+      const sampleForm = document.getElementById("registration-form");
+      //Add an event listener to the form element and handler for the submit an event.
+      sampleForm.addEventListener("submit", async (e) => {
+        let all = document.getElementsByClassName("ermas");
+        for (let i = 0; i < all.length; i++) {
+          all[i].innerHTML = "";
+        }
+        /**
+         * Prevent the default browser behaviour of submitting
+         * the form so that you can handle this instead.
+         */
+        // e.stopImmediatePropagation();
+        e.preventDefault();
+        /**
+         * Get the element attached to the event handler.
+         */
+        let form = e.currentTarget;
+        let url = form.action;
+
+        try {
+          /**
+           * Takes all the form fields and make the field values
+           * available through a `FormData` instance.
+           */
+          let formData = new FormData(form);
+
+          let formDataObject = Object.fromEntries(formData.entries());
+
+          // Format the plain form data as JSON
+          // let formDataJsonString = JSON.stringify(formDataObject);
+          document.getElementById("pending").style.display = "none";
+          document.getElementById("success").style.display = "none";
+          postData(url, formDataObject).then((data) => {
+            console.log(data); // JSON data parsed by `data.json()` call
+            if (data.pending) {
+              document.getElementById("pending").style.display = "block";
+            } else if (data.success) {
+              resetPage();
+              document.getElementById("success").style.display = "block";
+            } else if (data.errors) {
+              for (let x in data.errors) {
+                document.getElementById(x + "Error").innerHTML =
+                  data.errors[x].msg;
+              }
+            }
+          });
+
+          /**
+           * The `postFormFieldsAsJson()` function in the next step.
+           */
+        } catch (error) {
+          //If an error occurs display it in the console (for debugging)
+          console.error(error);
+        }
+      });
+    </script>
+
+    <script
+      src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+      integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+      integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+      integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+      crossorigin="anonymous"
+    ></script>
+  </body>
+</html>

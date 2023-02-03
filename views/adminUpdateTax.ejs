@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <link rel="icon" type="image/png" href="/images/logo_caption_sm.png" />
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- JavaScript Bundle with Popper -->
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-A3rJD856KowSb7dwlZdYEkO39Gagi7vIsF0jrRAoQmDKKtQBHUuLZ9AsSv4jD4Xa"
+      crossorigin="anonymous"
+    ></script>
+    <title><%= locals.title %></title>
+    <link rel="stylesheet" href="/css/bootstrap.min.css" type="text/css" />
+  </head>
+  <body onload="getLoan()">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+      <div class="container-fluid">
+        <img
+          src="/images/logo_caption_sm.png"
+          style="width: 100px; height: 100px"
+          alt="logo"
+        />
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarColor01"
+          aria-controls="navbarColor01"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarColor01">
+          <ul class="navbar-nav me-auto">
+            <li class="nav-item">
+              <a class="nav-link" href="/admin"
+                >Home
+                <span class="visually-hidden">(current)</span>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/admin/UpReport">UP Report</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/admin/combined-reports"
+                >Combined Reports</a
+              >
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="admin/getfarmerinfo">Farmer Info</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/admin/addproduct">Add Product</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/admin/updateprice">Update Price</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/admin/updateagent">Update Agent</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/admin/updatebudget">Update Budget</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link active" href="/admin/updatetax">Update Tax</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/admin/addloan">Add Loan</a>
+            </li>
+            <li class="nav-item dropdown">
+              <p
+                class="nav-link dropdown-toggle"
+                data-bs-toggle="dropdown"
+                role="button"
+                aria-haspopup="true"
+                aria-expanded="false"
+              >
+                Feedback
+              </p>
+              <div class="dropdown-menu">
+                <a class="dropdown-item" href="/admin/farmerfeedbacks"
+                  >Farmer Feedback</a
+                >
+                <a class="dropdown-item" href="/admin/agentfeedbacks"
+                  >Agent Feedback</a
+                >
+              </div>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/logout">Log Out</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+    <div
+      style="
+        text-align: center;
+        padding-left: 25%;
+        padding-right: 25%;
+        padding-top: 2%;
+      "
+    >
+      <h5>Update Tax</h5>
+      <div
+        class="alert alert-dismissible alert-success"
+        id="success"
+        style="display: none"
+      >
+        <button type="button" class="btn-close" onclick="cls2()"></button>
+        Tax updated successfully!
+      </div>
+      <div
+        class="alert alert-dismissible alert-danger"
+        id="errormsg"
+        style="display: none"
+      >
+        <button type="button" class="btn-close" onclick="cls()"></button>
+        Something went wrong! Try again later!!
+      </div>
+      <form>
+        <div class="form-outline mb-4" style="padding-top: 3%">
+          <select
+            class="form-select"
+            name="loan"
+            id="loan"
+            onchange="getDetails()"
+          >
+            <option value="" disabled selected hidden>Choose Loan</option>
+          </select>
+        </div>
+      </form>
+      <div
+        class="card text-white bg-primary mb-3"
+        style="max-width: 50rem; display: none"
+        id="card"
+      >
+        <div class="card-header">Loan Details</div>
+        <div class="card-body">
+          <h4 class="card-title" id="productName"></h4>
+          <span class="card-text">Amount: </span>
+          <span class="card-text" id="amount"></span>
+          <br />
+          <span class="card-text">Deduction: </span>
+          <span class="card-text" id="deduction"></span>
+          <br />
+          <span class="card-text">Tax: </span>
+          <span class="card-text" id="tax"></span>
+          <br />
+          <span class="card-text">Farmer Type: </span>
+          <span class="card-text" id="type"></span>
+        </div>
+      </div>
+      <form>
+        <div
+          class="form-outline mb-4"
+          style="padding-top: 1%; display: none"
+          id="taxDiv"
+        >
+          <input
+            type="number"
+            id="newtax"
+            name="newtax"
+            class="form-control form-control"
+            placeholder="Give new tax (percentage)"
+            required
+          />
+        </div>
+        <div id="button" style="display: none">
+          <button
+            id="proceed"
+            type="button"
+            class="btn btn-warning btn-lg ms-2"
+            onclick="update()"
+          >
+            Update
+          </button>
+        </div>
+      </form>
+    </div>
+    <script>
+      async function postData(url = "", data = {}) {
+        // Default options are marked with *
+        const response = await fetch(url, {
+          method: "POST", // *GET, POST, PUT, DELETE, etc.
+          mode: "cors", // no-cors, *cors, same-origin
+          cache: "no-cache", // *default, no-cache, reload, force-cache, only-if-cached
+          credentials: "same-origin", // include, *same-origin, omit
+          headers: {
+            "Content-Type": "application/json",
+            // 'Content-Type': 'application/x-www-form-urlencoded',
+          },
+          redirect: "follow", // manual, *follow, error
+          referrerPolicy: "no-referrer", // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
+          body: JSON.stringify(data), // body data type must match "Content-Type" header
+        });
+
+        return response.json(); // parses JSON response into native JavaScript objects
+      }
+
+      var ar = [];
+
+      function getLoan() {
+        ar.length = 0;
+        let d = document.getElementById("loan");
+        while (d.length > 1) {
+          d.remove(1);
+        }
+        d.options[0].selected = true;
+        postData("updatetax/getloans", {}).then((data) => {
+          for (let i = 0; i < data.length; i++) {
+            ar.push(data[i]);
+          }
+          let sel = document.getElementById("loan");
+          for (let i = 0; i < data.length; i++) {
+            let op = new Option(
+              data[i][1] + " - " + data[i][2] + "(D) - " + data[i][3] + "(T)",
+              data[i][0]
+            );
+            sel.append(op);
+          }
+        });
+      }
+
+      function getDetails() {
+        let id = document.getElementById("loan").value;
+        for (let i = 0; i < ar.length; i++) {
+          if (ar[i][0] == id) {
+            document.getElementById("amount").innerHTML = ar[i][1];
+            document.getElementById("deduction").innerHTML = ar[i][2];
+            document.getElementById("tax").innerHTML = ar[i][3];
+            document.getElementById("type").innerHTML = ar[i][4];
+            break;
+          }
+        }
+        document.getElementById("card").style.display = "block";
+        document.getElementById("taxDiv").style.display = "block";
+        document.getElementById("button").style.display = "block";
+        document.getElementById("newtax").value = "";
+      }
+
+      function update() {
+        cls();
+        cls2();
+        let id = document.getElementById("loan").value;
+        let ind = 0;
+        for (let i = 0; i < ar.length; i++) {
+          if (ar[i][0] == id) {
+            ind = i;
+            break;
+          }
+        }
+        let nt = document.getElementById("newtax").value;
+        if (nt == "") {
+          alert("Please give a tax!");
+          return;
+        }
+        if (parseFloat(nt) <= 0) {
+          alert("Tax must be greater than zero");
+          return;
+        }
+        if (nt == ar[ind][3]) {
+          alert("This loan has already that tax amount!");
+          return;
+        }
+        postData("updatetax/update", { loan_id: id, tax: nt }).then((data) => {
+          if (data.error) {
+            document.getElementById("errormsg").style.display = "block";
+          } else {
+            document.getElementById("success").style.display = "block";
+            document.getElementById("card").style.display = "none";
+            document.getElementById("taxDiv").style.display = "none";
+            document.getElementById("button").style.display = "none";
+            document.getElementById("loan").options[0].selected = true;
+            document.getElementById("newtax").value = "";
+            getLoan();
+          }
+        });
+      }
+
+      function cls() {
+        document.getElementById("errormsg").style.display = "none";
+      }
+
+      function cls2() {
+        document.getElementById("success").style.display = "none";
+      }
+    </script>
+    <script
+      src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+      integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+      integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+      integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+      crossorigin="anonymous"
+    ></script>
+  </body>
+</html>

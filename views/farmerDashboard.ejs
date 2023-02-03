@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <link rel="icon" type="image/png" href="/images/logo_caption_sm.png" />
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- JavaScript Bundle with Popper -->
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-A3rJD856KowSb7dwlZdYEkO39Gagi7vIsF0jrRAoQmDKKtQBHUuLZ9AsSv4jD4Xa"
+      crossorigin="anonymous"
+    ></script>
+    <title><%= locals.title%></title>
+    <link rel="icon" type="image/png" href="/images/logo_caption_sm.png" />
+    <link rel="stylesheet" href="/css/bootstrap.min.css" type="text/css" />
+  </head>
+  <body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+      <div class="container-fluid">
+        <img
+          src="/images/logo_caption_sm.png"
+          style="width: 100px; height: 100px"
+          alt="logo"
+        />
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarColor01"
+          aria-controls="navbarColor01"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarColor01">
+          <ul class="navbar-nav me-auto">
+            <li class="nav-item">
+              <a class="nav-link active" href="/farmer"
+                >Home
+                <span class="visually-hidden">(current)</span>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/farmer/transactions">Transactions</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/farmer/sendfeedback">Send Feedback</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/farmer/updateinfo">Change Password</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/logout">Log Out</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <div
+      class="card text-white bg-primary mx-auto"
+      style="max-width: 20rem; align-content: center"
+    >
+      <div class="card-body mx-auto">
+        <img
+          src="/profile_pictures/farmer/<%= locals.profile_picture %> "
+          style="width: 100px; height: 100px; align-self: center"
+          alt="profile-photo"
+        />
+      </div>
+      <div class="card-header" style="padding-left: 31%">
+        <button id="update-profile-photo" type="button" class="btn btn-primary">
+          Update Photo
+        </button>
+      </div>
+    </div>
+
+    <div class="modal" id="update-profile-photo-modal">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Update Your Profile Photo</h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+              id="close-modal"
+            >
+              <span aria-hidden="true"></span>
+            </button>
+          </div>
+          <form
+            id="upload_photo_form"
+            method="POST"
+            action="/farmer/update-photo"
+            enctype="multipart/form-data"
+          >
+            <div class="modal-body">
+              <div class="form-group">
+                <label for="profile-pic" class="form-label mt-4"
+                  >Upload Photo</label
+                >
+                <input
+                  class="form-control"
+                  type="file"
+                  id="profile-pic"
+                  name="avatar"
+                />
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button id="upload_photo" type="submit" class="btn btn-primary">
+                Save changes
+              </button>
+              <button
+                type="button"
+                class="btn btn-secondary"
+                data-bs-dismiss="modal"
+                id="close-modal2"
+              >
+                Close
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <div class="card mb-3" style="text-align: center">
+      <div class="card-body">
+        <h3 class="card-header"><%= name %></h3>
+        <h5 class="card-title">NID: <%= nid %></h5>
+        <h6 class="card-subtitle">Agent Name: <%= agentName %></h6>
+        <h6 class="card-subtitle" style="padding-top: 0.5%">
+          Agent ID: <%= agentId %>
+        </h6>
+      </div>
+    </div>
+    <div style="text-align: center; padding-top: 3%">
+      <div style="background-color: white; color: black">
+        <h3>Overview</h3>
+        <h5>Farmer Type: <%= typeName %></h5>
+        <h5>Due: <%= due %></h5>
+      </div>
+    </div>
+    <div style="text-align: center; padding-top: 3%">
+      <div style="background-color: rgb(61, 61, 61)">
+        <h3>Personal Information</h3>
+        <h5>Address: <%= address %></h5>
+        <h5>Contact number: <%= phoneNo %></h5>
+      </div>
+    </div>
+
+    <script>
+      // open a modal to update profile photo when update-profile-photo button is clicked
+      document
+        .getElementById("update-profile-photo")
+        .addEventListener("click", function () {
+          document.getElementById("update-profile-photo-modal").style.display =
+            "block";
+        });
+      // close the modal when close-modal button is clicked
+      document
+        .getElementById("close-modal")
+        .addEventListener("click", function () {
+          document.getElementById("update-profile-photo-modal").style.display =
+            "none";
+        });
+      document
+        .getElementById("close-modal2")
+        .addEventListener("click", function () {
+          document.getElementById("update-profile-photo-modal").style.display =
+            "none";
+        });
+      // close the modal when outside of the modal is clicked
+      window.addEventListener("click", function (event) {
+        if (
+          event.target == document.getElementById("update-profile-photo-modal")
+        ) {
+          document.getElementById("update-profile-photo-modal").style.display =
+            "none";
+        }
+      });
+    </script>
+
+    <script
+      src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+      integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+      integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+      integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+      crossorigin="anonymous"
+    ></script>
+  </body>
+</html>
