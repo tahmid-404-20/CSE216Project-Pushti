@@ -1,0 +1,14 @@
+INSERT INTO Products VALUES(1, 'Cow milk', 85);
+INSERT INTO Products VALUES(2, 'Goat milk', 50);
+INSERT INTO Products VALUES(3, 'Buffalo milk', 60);
+INSERT INTO Products VALUES(4, 'Sheep milk', 50);
+INSERT INTO Products VALUES(5, 'Cow meat', 650);
+INSERT INTO Products VALUES(6, 'Goat meat', 800);
+INSERT INTO Products VALUES(7, 'Buffalo meat', 500);
+INSERT INTO Products VALUES(8, 'Sheep meat', 450);
+INSERT INTO Products VALUES(9, 'Chicken meat', 150);
+INSERT INTO Products VALUES(10, 'Duck meat', 200);
+INSERT INTO Products VALUES(11, 'Goose meat', 220);
+INSERT INTO Products VALUES(12, 'Chicken egg', 10);
+INSERT INTO Products VALUES(13, 'Duck egg', 8);
+INSERT INTO Products VALUES(14, 'Goose egg', 8);

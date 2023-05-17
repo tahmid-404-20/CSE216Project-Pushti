@@ -1,0 +1,11 @@
+CREATE OR REPLACE FUNCTION GET_UNION_FROM_FARMER (fid IN NUMBER) RETURN NUMBER IS
+unid NUMBER;
+
+BEGIN
+SELECT union_id INTO unid 
+FROM farmer, agent 
+WHERE agent_id = id
+AND nid = fid;
+RETURN unid;
+END;
+/

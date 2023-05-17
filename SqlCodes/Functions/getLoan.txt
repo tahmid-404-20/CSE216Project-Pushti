@@ -1,0 +1,9 @@
+CREATE OR REPLACE FUNCTION getLoan(id NUMBER) RETURN NUMBER IS 
+	LoanAmount NUMBER;
+BEGIN
+	SELECT amount INTO LoanAmount 
+	FROM Loan 
+	WHERE loan_id = id;
+	RETURN LoanAmount;
+END;
+	

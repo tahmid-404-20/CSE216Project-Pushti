@@ -1,0 +1,148 @@
+CREATE OR REPLACE TRIGGER CHECK_INVENTORY_QUANTITY
+BEFORE INSERT
+ON SellLog
+FOR EACH ROW
+DECLARE
+prev_quantity NUMBER(11,2);
+agent_union_id INTEGER;
+product_unit_price NUMBER(8,2);
+product_quantity NUMBER(11,2);
+new_quantity NUMBER(11,2);
+
+BEGIN
+	SELECT union_id INTO agent_union_id FROM AGENT WHERE id = :NEW.agent_id;
+	
+	SELECT quantity INTO prev_quantity 
+	FROM INVENTORY WHERE product_id = :NEW.product_id AND union_id = agent_union_id;
+	
+	new_quantity := prev_quantity - :NEW.quantity;
+	
+	if (new_quantity < 0) THEN
+		RAISE_APPLICATION_ERROR(-20001, 'Quantity is NOT Supported for Inventory');
+	ELSE
+		UPDATE INVENTORY 
+		SET quantity = new_quantity
+		WHERE union_id = agent_union_id AND product_id = :NEW.product_id;
+		
+		SELECT unit_price INTO product_unit_price 
+		FROM PRODUCTS 
+		WHERE PRODUCT_ID = :NEW.PRODUCT_ID;
+		
+		product_quantity := :NEW.quantity;		
+		UPDATE UNIONPARISHAD 
+		SET BUDGET = BUDGET + product_quantity*product_unit_price
+		WHERE id = agent_union_id;
+		
+	END IF;
+END;
+/
+
+
+CREATE OR REPLACE TRIGGER CHECK_BUY_CONSTRAINTS
+BEFORE INSERT
+ON BuyLog
+FOR EACH ROW
+DECLARE
+agent_union_id INTEGER;
+
+product_unit_price NUMBER(8,2);
+product_quantity NUMBER(11,2);
+product_total_price NUMBER(12,2);
+
+prev_budget NUMBER(12,2);
+payable_amount NUMBER(12,2);
+updated_budget NUMBER(12,2);
+
+farmer_loan_id INTEGER;
+farmer_dues NUMBER(11,3);
+farmer_deduction NUMBER(7,3);
+farmer_tax NUMBER(7,3);
+farmer_debt_repayment_calculated NUMBER(11,3);
+farmer_debt_repayment_actual NUMBER(11,3);
+
+BEGIN
+	SELECT union_id INTO agent_union_id FROM AGENT WHERE id = :NEW.agent_id;
+	SELECT BUDGET INTO prev_budget FROM UNIONPARISHAD WHERE id = agent_union_id;
+	
+	SELECT unit_price INTO product_unit_price FROM PRODUCTS WHERE PRODUCT_ID = :NEW.PRODUCT_ID;
+	
+-- 	farmer loan and dues
+	SELECT LOAN_ID, DUE INTO farmer_loan_id,farmer_dues FROM FARMER WHERE NID = :NEW.farmer_id;
+	SELECT DEDUCTION,TAX INTO farmer_deduction, farmer_tax FROM LOAN WHERE LOAN_ID = farmer_loan_id;
+	
+	product_quantity := :NEW.quantity;
+	product_total_price := product_unit_price * product_quantity;
+	
+	farmer_debt_repayment_calculated := ROUND(product_total_price * (farmer_deduction/100.0),0);	
+	if(farmer_dues >= farmer_debt_repayment_calculated) THEN
+		farmer_debt_repayment_actual := farmer_debt_repayment_calculated;
+	ELSE
+		farmer_debt_repayment_actual := farmer_dues;
+	END IF;
+	
+	payable_amount := ROUND(product_total_price - (product_total_price*(farmer_tax)/100.0 + farmer_debt_repayment_actual),0);
+	updated_budget := prev_budget - payable_amount;
+	
+	if(updated_budget < 0) THEN
+		RAISE_APPLICATION_ERROR(-20001, 'Not Enough Budget Available for Purchase');
+	ELSE
+		UPDATE UNIONPARISHAD 
+		SET BUDGET = BUDGET - payable_amount
+		WHERE id = agent_union_id;
+		
+		UPDATE INVENTORY 
+		SET quantity = quantity + product_quantity
+		WHERE union_id = agent_union_id AND product_id = :NEW.product_id;
+		
+		UPDATE FARMER
+		SET DUE = DUE - farmer_debt_repayment_actual
+		WHERE NID = :NEW.farmer_id;
+		
+	END IF;
+END;
+/
+
+
+
+CREATE OR REPLACE TRIGGER CHECK_REQUEST_APPROVAL  
+BEFORE UPDATE 
+OF APPROVE
+ON REQUEST 
+FOR EACH ROW 
+WHEN (NEW.APPROVE = 'T') 
+DECLARE  
+agent_union_id INTEGER; 
+
+prev_budget NUMBER(12,2); 
+payable_amount NUMBER(12,2); 
+updated_budget NUMBER(12,2);
+
+farmer_nid NUMBER(10);
+farmer_due NUMBER(11,3);
+
+BEGIN 
+	SELECT union_id INTO agent_union_id FROM AGENT WHERE id = :NEW.agent_id; 
+	SELECT BUDGET INTO prev_budget FROM UNIONPARISHAD WHERE id = agent_union_id; 
+	
+	SELECT AMOUNT INTO payable_amount FROM LOAN WHERE LOAN_ID = :NEW.loan_id; 
+	
+	updated_budget := prev_budget - payable_amount; 
+	
+	if (updated_budget < 0) THEN 
+		RAISE_APPLICATION_ERROR(-20001, 'Not Enough Budget Available for Approving This Request'); 
+	ELSE 
+		UPDATE UNIONPARISHAD  
+		SET BUDGET = BUDGET - payable_amount 
+		WHERE id = agent_union_id; 
+		
+		farmer_nid := :NEW.FARMER_NID;
+		farmer_due := payable_amount;
+		
+		INSERT INTO FARMER VALUES(farmer_nid,:NEW.NAME,:NEW.PASSWORD,farmer_due,:NEW.DOB,:NEW.PHONENO,:NEW.ADDRESS,:NEW.AGENT_ID,:NEW.TYPE_ID,:NEW.REQUEST_ID,:NEW.LOAN_ID);
+	END IF;  
+
+END;  
+/ 
+
+
+SELECT * FROM USER_TRIGGERS;

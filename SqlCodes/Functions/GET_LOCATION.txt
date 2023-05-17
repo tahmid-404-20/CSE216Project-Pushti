@@ -1,0 +1,15 @@
+CREATE OR REPLACE FUNCTION GET_LOCATION(union_id IN INTEGER) RETURN VARCHAR2 IS 
+v_division VARCHAR2(30);
+v_district VARCHAR2(30);
+v_upazilla VARCHAR2(30);
+v_up VARCHAR2(30);
+msg VARCHAR2(60);
+BEGIN 
+	SELECT div.name, dis.name, u.name, up.name INTO v_division, v_district, v_upazilla, v_up 
+	FROM Division div, District dis, Upazilla u, (SELECT * FROM UnionParishad WHERE id = union_id) up 
+	WHERE up.upazilla_id = u.id 
+	AND u.district_id = dis.id 
+	AND dis.division_id = div.id;
+	msg := v_division||', '||v_district||', '||v_upazilla||', '||v_up;
+	RETURN msg;
+END;

@@ -1,0 +1,8 @@
+Replace bae with anything you like, after INDETIFIED BY [] the text is password
+Execute the statements stricly following the order in which the are given
+
+
+CREATE USER c##bae IDENTIFIED BY bae;
+GRANT CONNECT, RESOURCE, DBA TO c##bae;
+GRANT CREATE SESSION TO c##bae;
+GRANT UNLIMITED TABLESPACE TO c##bae;

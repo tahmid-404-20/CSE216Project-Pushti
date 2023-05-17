@@ -1,0 +1,33 @@
+CREATE TABLE Division (
+	id INTEGER PRIMARY KEY,
+	name VARCHAR(20)
+);
+
+CREATE TABLE District (
+	id INTEGER PRIMARY KEY,
+	name VARCHAR(20),
+	division_id INTEGER REFERENCES Division(id)
+);
+
+CREATE TABLE Upazilla (
+	id INTEGER PRIMARY KEY,
+	name VARCHAR(20),
+	district_id INTEGER REFERENCES District(id)
+);
+
+CREATE TABLE UnionParishad (
+	id INTEGER PRIMARY KEY,
+	name VARCHAR(25),
+	budget NUMBER(12,2),
+	upazilla_id INTEGER REFERENCES Upazilla(id)
+);
+
+CREATE TABLE Agent (
+	id NUMBER(8) PRIMARY KEY,
+	name VARCHAR(60),
+	password CHAR(30),
+	dob DATE,
+	phoneNo CHAR(12),
+	permanentAddress VARCHAR(100),
+	union_id INTEGER REFERENCES UnionParishad(id)
+);

@@ -1,0 +1,125 @@
+CREATE TABLE Division (
+	id INTEGER PRIMARY KEY,
+	name VARCHAR(20)
+);
+
+CREATE TABLE District (
+	id INTEGER PRIMARY KEY,
+	name VARCHAR(20),
+	division_id INTEGER REFERENCES Division(id)
+);
+
+CREATE TABLE Upazilla (
+	id INTEGER PRIMARY KEY,
+	name VARCHAR(20),
+	district_id INTEGER REFERENCES District(id)
+);
+
+CREATE TABLE UnionParishad (
+	id INTEGER PRIMARY KEY,
+	name VARCHAR(25),
+	budget NUMBER(12,2),
+	district_id INTEGER REFERENCES Upazilla(id)
+);
+
+CREATE TABLE Agent (
+	id NUMBER(8) PRIMARY KEY,
+	name VARCHAR(60),
+	password CHAR(30),
+	dob DATE,
+	phoneNo CHAR(12),
+	permanentAddress VARCHAR(100),
+	union_id INTEGER REFERENCES UnionParishad(id)
+);
+
+CREATE TABLE Request (
+	request_id NUMBER(12) PRIMARY KEY,
+	farmer_nid NUMBER(10),
+	name VARCHAR(60),
+	password CHAR(30),
+	dob DATE,
+	phoneNo CHAR(12),
+	address VARCHAR(100),
+	agent_id NUMBER(8) REFERENCES Agent(id),
+	type_id INTEGER REFERENCES FarmerType(type_id),
+	loan_id INTEGER REFERENCES Loan(loan_id),
+	approve CHAR(3)
+);
+
+CREATE TABLE Loan (
+	loan_id INTEGER PRIMARY KEY,
+	amount NUMBER(10, 2),
+	deduction NUMBER(7, 3),
+	tax NUMBER(7, 3)
+);
+
+CREATE TABLE FarmerType (
+	type_id INTEGER PRIMARY KEY,
+	title VARCHAR(20)
+);
+
+CREATE TABLE Receives (
+	type_id INTEGER REFERENCES FarmerType(type_id),
+	loan_id INTEGER REFERENCES Loan(loan_id),
+	PRIMARY KEY (type_id, loan_id)
+);
+
+CREATE TABLE Farmer (
+	nid NUMBER(10) PRIMARY KEY,
+	name VARCHAR(60),
+	password CHAR(30),
+	due NUMBER(11, 3),
+	dob DATE,
+	phoneNo CHAR(12),
+	address VARCHAR(100),
+	agent_id NUMBER(8) REFERENCES Agent(id),
+	type_id INTEGER REFERENCES FarmerType(type_id),
+	request_id NUMBER(12) REFERENCES Request(request_id),
+	loan_id INTEGER REFERENCES Loan(loan_id)
+);
+
+CREATE TABLE Products (
+	product_id INTEGER PRIMARY KEY,
+	name VARCHAR(20),
+	unit_price NUMBER(8, 2)
+);
+
+CREATE TABLE Produces (
+	type_id INTEGER REFERENCES FarmerType(type_id),
+	product_id INTEGER REFERENCES Products(product_id),
+	PRIMARY KEY (type_id, product_id)
+);
+
+
+CREATE TABLE BUYLOG (
+	bid NUMBER(15) PRIMARY KEY,
+	agent_id NUMBER(8) REFERENCES AGENT(ID),
+	farmer_id NUMBER(10) REFERENCES FARMER(NID),
+	product_id INTEGER REFERENCES PRODUCTS(PRODUCT_ID),
+	quantity NUMBER(10,2),
+	date_time DATE
+);
+
+CREATE TABLE SellLog (
+	sid NUMBER(15) PRIMARY KEY,
+	agent_id NUMBER(8) REFERENCES AGENT(ID),
+	buyer_id NUMBER(10) REFERENCES BUYER(NID),
+	product_id INTEGER REFERENCES PRODUCTS(PRODUCT_ID),
+	quantity NUMBER(10,2),
+	date_time DATE
+);
+
+CREATE TABLE Buyer (
+	nid NUMBER(10) PRIMARY KEY,
+	name VARCHAR(60),
+	dob DATE,
+	phoneno VARCHAR(12),
+	agent_id NUMBER(8) REFERENCES AGENT(ID)
+);
+
+CREATE TABLE INVENTORY(
+	union_id INTEGER REFERENCES UNIONPARISHAD(ID),
+	product_id INTEGER REFERENCES PRODUCTS(PRODUCT_ID),
+	quantity NUMBER(11,2),
+	PRIMARY KEY (UNION_ID,PRODUCT_ID)
+);
